@@ -1,0 +1,320 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Untree.co" />
+    <link rel="shortcut icon" href="{% static 'favicon.png' %}" />
+
+    <meta name="description" content="" />
+    <meta name="keywords" content="bootstrap, bootstrap5" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'fonts/flaticon/font/flaticon.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/tiny-slider.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <title>Consignment</title>
+    <style>
+        .suggestions-box {
+            border: 1px solid #ddd;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: white;
+            position: absolute;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .suggestions-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .suggestions-box li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .suggestions-box li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="site-mobile-menu site-navbar-target">
+        <div class="site-mobile-menu-header">
+            <div class="site-mobile-menu-close">
+                <span class="icofont-close js-menu-toggle"></span>
+            </div>
+        </div>
+        <div class="site-mobile-menu-body"></div>
+    </div>
+
+    {% include 'nav.html' %}
+    <br><br><br>
+
+    <br><br><br><br><br><br>
+    <style>
+        /* Basic styling for the table */
+        .table-container {
+            overflow-x: auto; /* Allows horizontal scrolling if the table is too wide */
+            margin-bottom: 20px; /* Adds space below the table */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        /* Basic styling for the search input */
+        #branchSearch {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        /* Styling for the grid layout */
+        .details-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            padding: 16px;
+        }
+        .details-item, .product-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            background-color: #f9f9f9;
+        }
+        .details-item p, .product-item p {
+            margin: 0;
+        }
+        .details-item .label, .product-item .label {
+            font-weight: bold;
+        }
+        /* Styling for the product details */
+        .product-details-container {
+            margin-top: 10px;
+        }
+        /* Additional styling to make the form and dropdown consistent */
+        form {
+            margin-bottom: 20px;
+        }
+        select {
+            padding: 4px;
+            margin-top: 4px;
+            width: 20%;
+        }
+        /* Styling for quantity input and total cost */
+        #quantity {
+            padding: 4px;
+            margin-top: 4px;
+            width: 100px;
+        }
+        #totalCost {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #updatedBalance {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        function filterDetails() {
+            var input, filter, table, rows, td, i, txtValue;
+            input = document.getElementById("branchSearch");
+            filter = input.value.toLowerCase();
+            table = document.getElementById("detailsTable");
+            rows = table.getElementsByTagName("tr");
+
+            for (i = 1; i < rows.length; i++) {
+                td = rows[i].getElementsByTagName("td")[1]; // Details are in the 2nd column (index 1)
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        rows[i].style.display = "";
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function calculateTotalCost() {
+            var pricePerUnit = parseFloat(document.getElementById("pricePerUnit").textContent);
+            var quantity = parseFloat(document.getElementById("quantity").value);
+            var totalCost = document.getElementById("totalCost");
+            var updatedBalance = document.getElementById("updatedBalance");
+
+            if (!isNaN(pricePerUnit) && !isNaN(quantity) && quantity > 0) {
+                var totalCostValue = pricePerUnit * quantity;
+                totalCost.textContent = 'Total Cost: ' + totalCostValue.toFixed(2);
+
+                // Calculate and display the updated balance
+                var balance = parseFloat(document.getElementById("currentBalance").textContent) || 0;
+                var newBalance = balance + totalCostValue;
+                updatedBalance.textContent = 'Updated Balance: ' + newBalance.toFixed(2);
+
+                // Set hidden input values
+                document.getElementById("totalAmount").value = totalCostValue.toFixed(2);
+                document.getElementById("updatedBalanceInput").value = newBalance.toFixed(2);
+                document.getElementById("kit_name").value = document.getElementById("productName").textContent;
+            } else {
+                totalCost.textContent = 'Total Cost:';
+                updatedBalance.textContent = 'Updated Balance:';
+
+                // Clear hidden input values
+                document.getElementById("totalAmount").value = '';
+                document.getElementById("updatedBalanceInput").value = '';
+                document.getElementById("kit_name").value = '';
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+        <h1 style="text-align: center;">Product Distribution</h1>
+    <form method="get" action="">
+        <label for="name">Name:</label>
+        <select name="name" id="name" onchange="this.form.submit()">
+            <option value="">-- Select a Name --</option>
+            {% for name in names %}
+                <option value="{{ name }}" {% if name == request.GET.name %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    {% if details %}
+        <h2>Details for {{ details.name }}</h2>
+
+        <div class="details-container">
+            <!-- Details for the selected person -->
+            <div class="details-item"><p class="label">Admission No:</p><p>{{ details.admission_no }}</p></div>
+            <div class="details-item"><p class="label">Date of Birth:</p><p>{{ details.dob }}</p></div>
+            <div class="details-item"><p class="label">Player Name:</p><p>{{ details.name }}</p></div>
+            <div class="details-item"><p class="label">Gender:</p><p>{{ details.gender }}</p></div>
+            <div class="details-item"><p class="label">Phone:</p><p>{{ details.phone }}</p></div>
+            <div class="details-item"><p class="label">Adhar:</p><p>{{ details.adhar }}</p></div>
+            <div class="details-item"><p class="label">Parent Name:</p><p>{{ details.parentName }}</p></div>
+            <div class="details-item"><p class="label">Mobile:</p><p>{{ details.mobile }}</p></div>
+            <div class="details-item"><p class="label">Email:</p><p>{{ details.email }}</p></div>
+            <div class="details-item"><p class="label">Place:</p><p>{{ details.place }}</p></div>
+            <div class="details-item"><p class="label">Address:</p><p>{{ details.address }}</p></div>
+            <div class="details-item"><p class="label">Uniform Size:</p><p>{{ details.uniformSize }}</p></div>
+            <div class="details-item"><p class="label">Uniform Color:</p><p>{{ details.uniformColor }}</p></div>
+            <div class="details-item"><p class="label">Package:</p><p>{{ details.package }}</p></div>
+            <div class="details-item"><p class="label">Sessions:</p><p>{{ details.sessions }}</p></div>
+            <div class="details-item"><p class="label">Total Amount:</p><p>{{ details.totalAmount }}</p></div>
+            <div class="details-item"><p class="label">Payment:</p><p>{{ details.payment }}</p></div>
+            <div class="details-item"><p class="label">Balance:</p><p id="currentBalance">{{ details.balance }}</p></div>
+            <div class="details-item"><p class="label">Batch Time:</p><p>{{ details.batchtime }}</p></div>
+            <div class="details-item"><p class="label">Date of Joining:</p><p>{{ details.doj }}</p></div>
+        </div>
+
+        <!-- Product Selection and Details -->
+        <form method="get" action="">
+            <input type="hidden" name="name" value="{{ details.name }}">
+            <label for="product">Select Product:</label>
+            <select name="product_id" id="product" onchange="this.form.submit()">
+                <option value="">-- Select a Product --</option>
+                {% for product in products %}
+                    <option value="{{ product.id }}" {% if product.id|stringformat:"s" == request.GET.product_id %}selected{% endif %}>{{ product.kit_name }}</option>
+                {% endfor %}
+            </select>
+        </form>
+
+        {% if product_details %}
+            <div class="product-details-container">
+                <h3>Product Details</h3>
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <input type="hidden" name="name" value="{{ details.name }}">
+                    <input type="hidden" name="admission_no" value="{{ details.admission_no }}">
+                    <input type="hidden" name="phone" value="{{ details.phone }}">
+                    <input type="hidden" name="adhar" value="{{ details.adhar }}">
+                    <input type="hidden" name="place" value="{{ details.place }}">
+                    <input type="hidden" name="address" value="{{ details.address }}">
+                    <input type="hidden" name="package" value="{{ details.package }}">
+                    <input type="hidden" name="sessions" value="{{ details.sessions }}">
+                    <input type="hidden" name="batchtime" value="{{ details.batchtime }}">
+                    <input type="hidden" id="kit_name" name="kit_name" value="{{ product_details.kit_name }}">
+                    <input type="hidden" id="balance" name="balance" value="{{ details.balance }}">
+
+                    <div class="details-container">
+                        <div class="product-item">
+                            <p class="label">Product Name:</p>
+                            <p id="productName">{{ product_details.kit_name }}</p>
+                        </div>
+
+                        <div class="product-item">
+                            <p class="label">Price per Unit:</p>
+                            <p id="pricePerUnit">{{ product_details.price_per_unit }}</p>
+                        </div>
+
+                        <div class="product-item">
+                            <p class="label">Quantity:</p>
+                            <input type="number" id="quantity" name="quantity" min="1" oninput="calculateTotalCost()">
+                        </div>
+
+                        <div class="product-item">
+                            <p class="label" id="totalCost">Total Cost:</p>
+                        </div>
+                        <div class="product-item">
+                            <p class="label" id="updatedBalance">Updated Balance:</p>
+                        </div>
+
+                        <input type="hidden" id="price_per_unit" name="price_per_unit" value="{{ product_details.price_per_unit }}">
+                        <input type="hidden" id="totalAmount" name="totalAmount">
+                        <input type="hidden" id="updatedBalanceInput" name="updatedBalance">
+
+                        <button type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+    {% endif %}
+  <br><br><br><br><br><br><br><br><br>
+  <div class="row mt-5">
+        <div class="col-12 text-center">
+            <p>
+                Copyright &copy;
+                <script>
+                    document.write(new Date().getFullYear());
+                </script>
+                . All Rights Reserved. <br>&mdash; Designed and Developed By -
+                <a href="https://flowercreeper.com/index.php">FlowerCreeper</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Preloader -->
+    <div id="overlayer"></div>
+    <div class="loader">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/tiny-slider.js' %}"></script>
+    <script src="{% static 'js/aos.js' %}"></script>
+    <script src="{% static 'js/navbar.js' %}"></script>
+    <script src="{% static 'js/counter.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+</body>
+</html>
+
+

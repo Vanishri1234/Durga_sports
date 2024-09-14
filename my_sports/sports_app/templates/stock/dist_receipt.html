@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        body {
+            color: #333; /* Default text color for body */
+            background-color: #f8f9fa; /* Light gray background */
+        }
+        .invoice-box {
+            border: 1px solid #ddd;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background-color: #fff;
+            margin: 20px 0;
+            border-radius: 8px; /* Rounded corners */
+        }
+        .company-info h2 {
+            margin-top: 0;
+            font-size: 28px;
+            color: #28a745; /* Green text color for company name */
+        }
+        .company-info p {
+            margin-bottom: 5px;
+            color: #6c757d; /* Gray text color for company details */
+        }
+        .customer-info p {
+            margin-bottom: 5px;
+            color: #333; /* Default text color for customer details */
+        }
+        .invoice-box table th,
+        .invoice-box table td {
+            font-size: 14px;
+            vertical-align: middle;
+            text-align: center;
+            color: #333; /* Default text color for table headers and data */
+            border: 1px solid #dee2e6; /* Add border to table cells */
+        }
+        .invoice-box .btn {
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+        .highlight {
+            background-color: #e9ecef; /* Light gray background for highlighted sections */
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold; /* Bold text */
+        }
+        .text-right img {
+            max-width: 150px; /* Limit image size */
+        }
+
+        /* Responsive table */
+        @media (max-width: 768px) {
+            .invoice-box table {
+                font-size: 12px;
+            }
+        }
+
+        /* Hide print button during print */
+        @media print {
+            .btn-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="invoice-box">
+                        <div class="company-info text-center mb-4">
+                            <h2><b>Sports Academy</b></h2>
+                            <p>Office/Ground: 32/2, 4, 5, 6 Behind New Court Complex, B.S. Kallur Layout, Vidyanagar,<br>
+                            HUBBALLI - 580 030. M: 99866 8817, 9986018817</p>
+                            <p>Email: shridurgasportsacademy@gmail.com | Website: shridurgasportsacademy.com</p>
+                        </div>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td class="text-left customer-info">
+                                    <p><span class="font-weight-bold">Admission No:</span> {{ admission.admission_no }}</p>
+                                    <p><span class="font-weight-bold">Player Name:</span> {{ admission.name }}</p>
+                                    <p><span class="font-weight-bold">Phone Number:</span> {{ admission.phone }}</p>
+                                    <p><span class="font-weight-bold">Address:</span> {{ admission.address }}</p>
+                                </td>
+                                <td class="text-right">
+                                    <p><strong>Receipt Number:</strong> {{ admission.receipt }}</p>
+                                    <p><strong>Date:</strong> <span id="receipt-date"></span></p>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Kit Table -->
+                        <table class="table table-striped table-bordered" id="kit-table" style="display: {{ admission.kit_name|yesno:"table,none" }};">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if admission.kit_name %}
+                                    <tr>
+                                        <td>{{ admission.kit_name }}</td>
+                                        <td>{{ admission.price_per_unit }}</td>
+                                        <td>{{ admission.quantity }}</td>
+                                        <td>{{ admission.totalCost }}</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+
+                        <!-- Grand Total and Remaining Balance Section -->
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="text-right"><strong>Product Cost:</strong></td>
+                                    <td id="product-cost-amount">{{ admission.totalCost }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right"><strong>Admission Balance:</strong></td>
+                                    <td id="remaining-balance-amount">{{ admission.balance }}</td>
+                                </tr>
+                                <tr id="grand-total-row">
+                                    <td class="text-right"><strong>Grand Total:</strong></td>
+                                    <td id="grand-total-amount">0.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td colspan="7">
+                                        <div class="text-right"><br>
+                                            <p><strong>Authorized Signature:</strong></p>
+                                            <img src="{{ admission.signature_url }}" alt="Authorized Signature">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td class="text-left">
+                                        <p><strong>Payment Amount in Words:</strong> <span id="payment-in-words"></span></p>
+                                    </td>
+                                </tr>
+                                <tr id="balance-date-row" style="display: {{ admission.balance|yesno:"table-row,none" }};">
+                                    <td class="text-left">
+                                        <p><strong>Payment Due Date:</strong> <span id="next-payment-date"></span></p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- Buttons for printing or navigating back -->
+                        <div class="text-center">
+                            <a href="javascript:void(0);" onclick="window.print();" class="btn btn-danger btn-print">Print</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- JavaScript to convert payment amount to words and calculate next payment due date -->
+    <script>
+        function numberToWords(num) {
+            const a = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+            const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+            const g = ['', 'Thousand', 'Million', 'Billion', 'Trillion', 'Quadrillion', 'Quintillion', 'Sextillion', 'Septillion', 'Octillion', 'Nonillion'];
+
+            if (typeof num === 'string') num = parseInt(num, 10);
+            if (num === 0) return 'Zero';
+
+            let words = [];
+            let chunks = [];
+            let chunkCount = 0;
+
+            while (num > 0) {
+                chunks.push(num % 1000);
+                num = Math.floor(num / 1000);
+                chunkCount++;
+            }
+
+            for (let i = 0; i < chunkCount; i++) {
+                let chunk = chunks[i];
+                if (chunk === 0) continue;
+                let chunkStr = '';
+                let hundreds = Math.floor(chunk / 100);
+                let tens = chunk % 100;
+                if (hundreds > 0) {
+                    chunkStr += a[hundreds] + ' Hundred ';
+                    if (tens > 0) chunkStr += 'and ';
+                }
+                if (tens < 20) {
+                    chunkStr += a[tens];
+                } else {
+                    chunkStr += b[Math.floor(tens / 10)];
+                    if (tens % 10 > 0) chunkStr += '-' + a[tens % 10];
+                }
+                words.push(chunkStr + ' ' + g[i]);
+            }
+
+            return words.reverse().join(' ').trim();
+        }
+
+        function addDays(date, days) {
+            const result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result;
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Display current date
+            const today = new Date();
+            const formattedToday = today.toLocaleDateString('en-GB'); // Format as DD/MM/YYYY
+            document.getElementById("receipt-date").innerText = formattedToday;
+
+            // Initialize values
+            const totalCost = parseFloat("{{ admission.totalCost }}") || 0;
+            const remainingBalance = parseFloat("{{ admission.balance }}") || 0;
+            const grandTotal = totalCost + remainingBalance;
+
+            // Display grand total
+            if (totalCost > 0) {
+                document.getElementById("product-cost-amount").innerText = totalCost.toFixed(2);
+                document.getElementById("grand-total-amount").innerText = grandTotal.toFixed(2);
+
+                const paymentInWords = numberToWords(grandTotal);
+                document.getElementById("payment-in-words").innerText = paymentInWords;
+            }
+
+            // Display remaining balance if applicable
+            if (remainingBalance > 0) {
+                document.getElementById("remaining-balance-amount").innerText = remainingBalance.toFixed(2);
+
+                // Display next payment date
+                const currentDate = new Date();
+                const nextPaymentDate = addDays(currentDate, 15);
+                const formattedDate = nextPaymentDate.toLocaleDateString('en-GB'); // Format as DD/MM/YYYY
+                document.getElementById("next-payment-date").innerText = formattedDate;
+                document.getElementById("balance-date-row").style.display = 'table-row';
+            }
+        });
+    </script>
+</body>
+</html>

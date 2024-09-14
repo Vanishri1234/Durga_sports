@@ -1,0 +1,187 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Untree.co" />
+    <link rel="shortcut icon" href="{% static 'favicon.png' %}" />
+
+    <meta name="description" content="" />
+    <meta name="keywords" content="bootstrap, bootstrap5" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/tiny-slider.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <title>Attendance List</title>
+    <style>
+        .suggestions-box {
+            border: 1px solid #ddd;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: white;
+            position: absolute;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .suggestions-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .suggestions-box li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .suggestions-box li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="site-mobile-menu site-navbar-target">
+        <div class="site-mobile-menu-header">
+            <div class="site-mobile-menu-close">
+                <span class="icofont-close js-menu-toggle"></span>
+            </div>
+        </div>
+        <div class="site-mobile-menu-body"></div>
+    </div>
+
+    {% include 'coach_nav.html' %}
+    <br><br><br>  <br><br>
+
+    <div class="container mt-5">
+        <h1 class="mb-4">Attendance List</h1>
+
+        <!-- Date range search form -->
+        <form method="get" action="{% url 'attendance_list' %}" class="mb-4">
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <label for="start_date" class="form-label">Start Date:</label>
+                    <input type="date" id="start_date" name="start_date" class="form-control" value="{{ request.GET.start_date }}">
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="end_date" class="form-label">End Date:</label>
+                    <input type="date" id="end_date" name="end_date" class="form-control" value="{{ request.GET.end_date }}">
+                </div>
+                <div class="col-md-3 mb-3 align-self-end">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Display counts for present and absent records -->
+
+
+        <!-- Table displaying the attendance data -->
+        <div class="table-responsive mb-4">
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Sessions</th>
+                        <th>Address</th>
+                        <th>Batch Time</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attendance in attendances %}
+                        <tr>
+                            <td>{{ attendance.current_date }}</td>
+                            <td>{{ attendance.name }}</td>
+                            <td>{{ attendance.sessions }}</td>
+                            <td>{{ attendance.address }}</td>
+                            <td>{{ attendance.batchtime }}</td>
+                            <td>{{ attendance.status }}</td>
+                            <td>
+                                <a href="?start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}&name={{ attendance.name }}" class="btn btn-info btn-sm">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center">No records found</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Table displaying per-month and name attendance counts -->
+        {% if name_filter %}
+            <h2 class="mb-4">Monthly Attendance Count for {{ name_filter }}</h2>
+            <div class="table-responsive mb-4">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Year</th>
+                            <th>Month</th>
+                            <th>Present Count</th>
+                            <th>Absent Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in monthly_name_attendance %}
+                            <tr>
+                                <td>{{ entry.year }}</td>
+                                <td>{{ entry.month }}</td>
+                                <td>{{ entry.present_count }}</td>
+                                <td>{{ entry.absent_count }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">No data available</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+    <br><br><br><br><br><br><br><br><br>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12 text-center">
+                <p>
+                    Copyright &copy;
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script>
+                    . All Rights Reserved. <br>&mdash; Designed and Developed By -
+                    <a href="https://flowercreeper.com/index.php">FlowerCreeper</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preloader -->
+    <div id="overlayer"></div>
+    <div class="loader">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/tiny-slider.js' %}"></script>
+    <script src="{% static 'js/aos.js' %}"></script>
+    <script src="{% static 'js/navbar.js' %}"></script>
+    <script src="{% static 'js/counter.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+</body>
+</html>

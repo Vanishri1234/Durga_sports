@@ -1,0 +1,174 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Playalong</title>
+	<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+	<link href="{% static 'css/global.css' %}" rel="stylesheet">
+	<link href="{% static 'css/index.css' %}" rel="stylesheet">
+	<link href="{% static 'css/element.css' %}" rel="stylesheet">
+	<link rel="{% static 'stylesheet' %}" type="text/css" href="css/font-awesome.min.css" />
+	<link href="{% static 'https://fonts.googleapis.com/css?family=Alata&display=swap' %}" rel="stylesheet">
+	<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+	<script src="{% static 'js/ekko-lightbox.js' %}"></script>
+  </head>
+
+<body data-spy="scroll" data-target=".navbar" data-offset="50">
+
+<section id="header">
+	<nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html"><i class="fa fa-trophy"></i> <span class="col">Sports</span> Team</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{% url 'home' %}" class="m_tag">Home</a></li> <!-- Added Home link here -->
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle m_tag" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Enquiry <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'enquiry_form' %}" class="pl-4">Enquiry Form</a></li>
+                            <li><a href="{% url 'enquiry_list' %}" class="pl-4">Enquiry List</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle m_tag" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admission <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'register' %}" class="pl-4">Admission Form</a></li>
+                            <li><a href="{% url 'admission_list' %}" class="pl-4">Admission List</a></li>
+                            <li><a href="{% url 'sessions' %}" class="pl-4">Add Sessions</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle m_tag" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Coach <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'coach_reg' %}" class="pl-4">Coach Registration</a></li>
+                            <li><a href="{% url 'coach_list' %}" class="pl-4">Coach List</a></li>
+                            <li><a href="{% url 'player_name' %}" class="pl-4">Coach Allocation</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle m_tag" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Stock <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'kit_entry' %}" class="pl-4">Kit Entry</a></li>
+                            <li><a href="{% url 'kit_list' %}" class="pl-4">Kit List</a></li>
+                            <li><a href="{% url 'item_entry' %}" class="pl-4">Item Entry</a></li>
+                            <li><a href="{% url 'item_list' %}" class="pl-4">Item List</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle m_tag" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Distribution <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'kit_dist' %}" class="pl-4">Kit Distribution</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+</section><br><br><br><br>
+<body>
+<div class="container mt-5">
+    <h2>Kit Entry Form</h2>
+    <form id="kitEntryForm" method="POST">
+        {% csrf_token %}
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">SI.No</th>
+                        <th scope="col">Brand Name</th>
+                        <th scope="col">No of Stock</th>
+                        <th scope="col">Unit Price</th>
+
+                    </tr>
+                </thead>
+                <tbody id="kitEntryTableBody">
+                    <tr>
+                        <td>1</td>
+                        <td><input type="text" class="form-control" name="brand_name[]" required></td>
+                        <td><input type="number" class="form-control" name="no_of_stock[]" required></td>
+                        <td><input type="number" class="form-control" name="unit_price[]"  ></td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="addRow()">Add Row</button>
+        <button type="submit" class="btn btn-success">Save</button>
+    </form>
+</div>
+
+<script>
+    function addRow() {
+        const tableBody = document.getElementById('kitEntryTableBody');
+        const rowCount = tableBody.rows.length;
+        const row = tableBody.insertRow();
+        row.innerHTML = `
+            <td>${rowCount + 1}</td>
+            <td><input type="text" class="form-control" name="brand_name[]" required></td>
+            <td><input type="number" class="form-control" name="no_of_stock[]" required></td>
+            <td><input type="number" class="form-control" name="unit_price[]" step="0.01" required></td>
+            <td>
+                <button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button>
+                <button type="button" class="btn btn-info" onclick="editRow(this)">Edit</button>
+                <button type="button" class="btn btn-primary d-none" onclick="saveRow(this)">Save</button>
+            </td>
+        `;
+    }
+
+    function removeRow(button) {
+        const row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+        updateRowNumbers();
+    }
+
+    function editRow(button) {
+        const row = button.parentNode.parentNode;
+        const inputs = row.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.disabled = false;
+        });
+        button.classList.add('d-none');
+        row.querySelector('.btn-primary').classList.remove('d-none');
+    }
+
+    function saveRow(button) {
+        const row = button.parentNode.parentNode;
+        const inputs = row.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.disabled = true;
+        });
+        button.classList.add('d-none');
+        row.querySelector('.btn-info').classList.remove('d-none');
+    }
+
+    function updateRowNumbers() {
+        const rows = document.querySelectorAll('#kitEntryTableBody tr');
+        rows.forEach((row, index) => {
+            row.cells[0].innerText = index + 1;
+        });
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

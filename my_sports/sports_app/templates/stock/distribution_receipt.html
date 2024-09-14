@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+ <div class="container mt-5">
+        <div class="col-md-9">
+            <h1 class="mb-4"><b>Customer Details</b></h1>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="selectCustomer" class="form-label">Select Customer</label>
+                    <select id="selectCustomer" class="form-select select2" name="customerName" style="width: 100%;">
+                        <option>Select</option>
+                        <!-- Dynamic options filled from server-side template -->
+                        {% for name in cName %}
+                        <option value="{{ name.customerName }}">{{ name.customerName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div id="customerDetails" class="border rounded p-3 bg-light">
+                <!-- Customer Details Fields populated dynamically -->
+            </div>
+        </div>
+</body>
+</html>

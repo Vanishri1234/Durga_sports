@@ -1,0 +1,208 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Untree.co" />
+    <link rel="shortcut icon" href="{% static 'favicon.png' %}" />
+
+    <meta name="description" content="" />
+    <meta name="keywords" content="bootstrap, bootstrap5" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/tiny-slider.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <title>Coach and Attendance Details</title>
+    <style>
+        .suggestions-box {
+            border: 1px solid #ddd;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: white;
+            position: absolute;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .suggestions-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .suggestions-box li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .suggestions-box li:hover {
+            background-color: #f0f0f0;
+        }
+
+        .coach-details {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 18px;
+            margin-bottom: 50px;
+            border: 1px solid #ddd;
+        }
+
+        .coach-details .row {
+            display: flex;
+            align-items: right;
+        }
+
+        .coach-details .coach-info p {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .coach-details .date {
+            text-align: right;
+            font-size: 1.25rem;
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+        }
+
+        .btn-submit {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="site-mobile-menu site-navbar-target">
+        <div class="site-mobile-menu-header">
+            <div class="site-mobile-menu-close">
+                <span class="icofont-close js-menu-toggle"></span>
+            </div>
+        </div>
+        <div class="site-mobile-menu-body"></div>
+    </div>
+
+    {% include 'coach_nav.html' %}
+    <br><br><br>   <br><br><br>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <h1 class="mb-4 text-center">Coach Details</h1>
+
+                {% if coach %}
+                    <div class="coach-details">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="coach-info">
+                                    <p class="coach-name"><strong>Coach Name:</strong> {{ coach.coachname }}</p>
+                                    <p class="coach-type"><strong>Coach Type:</strong> {{ coach.coachType }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-md-end">
+                                <p class="date"><strong>Date:</strong> {{ current_date }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% elif msg %}
+                    <p class="alert alert-warning">{{ msg }}</p>
+                {% else %}
+                    <p class="alert alert-warning">No coach details available.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="container mt-5">
+            <h1 class="mb-4 text-center">Player Attendance Details</h1>
+
+            <form method="post" action="{% url 'submit_attendance' %}">
+                {% csrf_token %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Player Name</th>
+                                <th>Session</th>
+                                <th>Batch Time</th>
+                                <th>Attendance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for player in players %}
+                            <tr>
+                                <td>{{ player.name }}</td>
+                                <td>{{ player.sessions }}</td>
+                                <td>{{ player.batchtime }}</td>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="radio" id="present_{{ player.id }}" name="attendance-{{ player.id }}" value="present" class="form-check-input" required>
+                                        <label for="present_{{ player.id }}" class="form-check-label">Present</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" id="absent_{{ player.id }}" name="attendance-{{ player.id }}" value="absent" class="form-check-input">
+                                        <label for="absent_{{ player.id }}" class="form-check-label">Absent</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">No players available.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <button type="submit" class="btn btn-submit">Submit Attendance</button>
+            </form>
+
+            {% if not coach %}
+                <div class="login-link text-center mt-4">
+                    <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <br><br><br><br><br><br><br><br><br>
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p>
+                        Copyright &copy;
+                        <script>
+                            document.write(new Date().getFullYear());
+                        </script>
+                        . All Rights Reserved. <br>&mdash; Designed and Developed By -
+                        <a href="https://flowercreeper.com/index.php">FlowerCreeper</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preloader -->
+    <div id="overlayer"></div>
+    <div class="loader">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/tiny-slider.js' %}"></script>
+    <script src="{% static 'js/aos.js' %}"></script>
+    <script src="{% static 'js/navbar.js' %}"></script>
+    <script src="{% static 'js/counter.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Playalong</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/global.css' %}" rel="stylesheet">
+    <link href="{% static 'css/index.css' %}" rel="stylesheet">
+    <link href="{% static 'css/element.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Alata&display=swap" rel="stylesheet">
+    <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/ekko-lightbox.js' %}"></script>
+</head>
+
+<body data-spy="scroll" data-target=".navbar" data-offset="50">
+
+    <section id="header">
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header page-scroll">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="index.html"><i class="fa fa-trophy"></i> <span class="col">MY SPORTS</span> ACADEMY</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="{% url 'home' %}" class="m_tag">Home</a></li> <!-- Added Home link here -->
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle m_tag" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Enquiry <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{% url 'enquiry_form' %}" class="pl-4">Enquiry Form</a></li>
+                                <li><a href="{% url 'enquiry_list' %}" class="pl-4">Enquiry List</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle m_tag" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admission <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{% url 'register' %}" class="pl-4">Admission Form</a></li>
+                                <li><a href="{% url 'admission_list' %}" class="pl-4">Admission List</a></li>
+                                <li><a href="{% url 'sessions' %}" class="pl-4">Add Sessions</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle m_tag" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Coach <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{% url 'coach_reg' %}" class="pl-4">Coach Registration</a></li>
+                                <li><a href="{% url 'coach_list' %}" class="pl-4">Coach List</a></li>
+                                <li><a href="{% url 'player_name' %}" class="pl-4">Coach Allocation</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle m_tag" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Stock <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{% url 'kit_entry' %}" class="pl-4">Kit Entry</a></li>
+                                <li><a href="{% url 'kit_list' %}" class="pl-4">Kit List</a></li>
+                                <li><a href="{% url 'item_entry' %}" class="pl-4">Item Entry</a></li>
+                                <li><a href="{% url 'item_list' %}" class="pl-4">Item List</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle m_tag" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Distribution <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{% url 'kit_dist' %}" class="pl-4">Kit Distribution</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </div>
+            <!-- /.container-fluid -->
+        </nav>
+    </section>
+<br><br><br><br><br><br>
+    <section id="main-content" class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="form-container bg-light p-4 rounded shadow">
+                        <h2 class="text-center mb-4">Sessions Form</h2>
+                        <form method="post" id="sessionsForm">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="Session">Session:</label>
+                                <select id="Session" name="session" class="form-control">
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="half-yearly">Half-Yearly</option>
+                                    <option value="yearly">Yearly</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="weeklySessions">Weekly Sessions:</label>
+                                <select id="weeklySessions" name="weeklySessions" class="form-control">
+                                    <option value="weekly 2">Weekly 2</option>
+                                    <option value="weekly 3">Weekly 3</option>
+                                    <option value="weekly 6">Weekly 6</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="payment">Payment:</label>
+                                <input type="number" id="payment" name="payment" class="form-control" placeholder="Enter prize..." required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<br><br><br><br><br><br><br><br><br><br><br><br>
+    <section id="footer_bottom">
+        <div class="container">
+            <div class="row">
+                <div class="footer_bottom_1 clearfix">
+                    <div class="col-sm-6">
+                        <div class="footer_bottom_1i1 clearfix">
+                            <p class="col_3">© 2013 Your Website Name. All Rights Reserved | Design by <a class="col_1" href="http://www.templateonweb.com">TemplateOnWeb</a></p>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="footer_bottom_1i2 text-center clearfix">
+                            <ul class="social-network social-circle mgt">
+                                <li><a href="#" class="icoRss" title="Rss"><i class="fa fa-rss"></i></a></li>
+                                <li><a href="#" class="icoFacebook" title="Facebook"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="#" class="icoTwitter" title="Twitter"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#" class="icoGoogle" title="Google +"><i class="fa fa-google-plus"></i></a></li>
+                                <li><a href="#" class="icoLinkedin" title="Linkedin"><i class="fa fa-linkedin"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="footer_bottom_1i3 text-right clearfix">
+                            <h6 class="col_2">
+                                <a class="col_3" href="#">PRIVACY POLICY</a> | <a class="col_3" href="#">TERMS & CONDITIONS</a>
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="toTop" class="btn btn-info" style="display: block; background:#d40722; color:#fff; border:none;"><span class="fa fa-chevron-up"></span></div>
+
+</body>
+</html>

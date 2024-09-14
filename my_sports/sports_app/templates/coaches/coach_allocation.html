@@ -1,0 +1,235 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Untree.co" />
+    <link rel="shortcut icon" href="{% static 'favicon.png' %}" />
+
+    <meta name="description" content="" />
+    <meta name="keywords" content="bootstrap, bootstrap5" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'fonts/flaticon/font/flaticon.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/tiny-slider.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <title>Consignment</title>
+    <style>
+        .suggestions-box {
+            border: 1px solid #ddd;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: white;
+            position: absolute;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .suggestions-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .suggestions-box li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .suggestions-box li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="site-mobile-menu site-navbar-target">
+        <div class="site-mobile-menu-header">
+            <div class="site-mobile-menu-close">
+                <span class="icofont-close js-menu-toggle"></span>
+            </div>
+        </div>
+        <div class="site-mobile-menu-body"></div>
+    </div>
+
+    {% include 'nav.html' %}
+    <br><br><br>  <br><br><br>
+
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">Coach Allocation Form</h2>
+        <form method="post" action="{% url 'coach_allocation' %}">
+            {% csrf_token %}
+            <div class="form-row form-group">
+                <div class="col-md-6">
+                    <label for="name">Player Name:</label>
+                    <select id="name" name="name" class="form-control" required>
+                        <option value="">Select Player</option>
+                        {% for name in rName %}
+                            <option value="{{ name.name }}">{{ name.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-row form-group">
+
+                <div class="col-md-6">
+                    <label for="session">Session:</label>
+                    <input type="text" id="session" name="session" class="form-control" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label for="batchtime">Batch:</label>
+                    <input type="text" id="batchtime" name="batchtime" class="form-control" readonly>
+                </div>
+            </div>
+            <div class="form-row form-group">
+                <div class="col-md-6">
+                    <label for="coachname">Coach Name:</label>
+                    <select id="coachname" name="coachname" class="form-control" required>
+                        <option value="">Select Coach</option>
+                        {% for cname in cName %}
+                            <option value="{{ cname.coachname }}">{{ cname.coachname }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="coachType">Coach Type:</label>
+                    <input type="text" id="coachType" name="coachType" class="form-control" readonly>
+                </div>
+            </div><br>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+
+
+
+    <!-- end copyright -->
+
+    <!-- jquery -->
+    <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+    <!-- bootstrap -->
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <!-- count down -->
+    <script src="{% static 'js/jquery.countdown.js' %}"></script>
+    <!-- isotope -->
+    <script src="{% static 'js/jquery.isotope-3.0.6.min.js' %}"></script>
+    <!-- waypoints -->
+    <script src="{% static 'js/waypoints.js' %}"></script>
+    <!-- owl carousel -->
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <!-- magnific popup -->
+    <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+    <!-- mean menu -->
+    <script src="{% static 'js/jquery.meanmenu.min.js' %}"></script>
+    <!-- sticker js -->
+    <script src="{% static 'js/sticker.js' %}"></script>
+    <!-- main js -->
+    <script src="{% static 'js/main.js' %}"></script>
+
+
+
+
+
+
+<script>!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#name').change(function() {
+                var name = $(this).val();
+                if (name) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "{% url 'fetch_name_data' %}",
+                        data: {
+                            'name': name,
+                            'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            if (response.error) {
+                                alert(response.error);
+                            } else {
+
+                                $('#session').val(response.session);
+                                $('#batchtime').val(response.batchtime)
+                            }
+                        },
+                        error: function() {
+                            alert('An error occurred while fetching player data.');
+                        }
+                    });
+                } else {
+
+                    $('#session').val('');
+                    $('#batchtime').val('');
+                }
+            });
+
+            $('#coachname').change(function() {
+                var coachname = $(this).val();
+                if (coachname) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "{% url 'fetch_coach_data' %}",
+                        data: {
+                            'coachname': coachname,
+                            'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            if (response.error) {
+                                alert(response.error);
+                            } else {
+                                $('#coachType').val(response.coachType);
+                            }
+                        },
+                        error: function() {
+                            alert('An error occurred while fetching coach data.');
+                        }
+                    });
+                } else {
+                    $('#coachType').val('');
+                }
+            });
+        });
+    </script>
+
+
+  <div class="row mt-5">
+        <div class="col-12 text-center">
+            <p>
+                Copyright &copy;
+                <script>
+                    document.write(new Date().getFullYear());
+                </script>
+                . All Rights Reserved. <br>&mdash; Designed and Developed By -
+                <a href="https://flowercreeper.com/index.php">FlowerCreeper</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Preloader -->
+    <div id="overlayer"></div>
+    <div class="loader">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/tiny-slider.js' %}"></script>
+    <script src="{% static 'js/aos.js' %}"></script>
+    <script src="{% static 'js/navbar.js' %}"></script>
+    <script src="{% static 'js/counter.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+</body>
+</html>

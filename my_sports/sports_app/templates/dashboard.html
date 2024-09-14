@@ -1,0 +1,27 @@
+<!-- dashboard.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        /* Basic styling */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome, {{ coachname }}!</h1>
+        <h2>Sessions:</h2>
+        <ul>
+            {% for allocation in allocations %}
+                <li>
+                    <strong>Session:</strong> {{ allocation.session }}<br>
+                    <strong>Batch Time:</strong> {{ allocation.batchtime }}
+                </li>
+            {% empty %}
+                <li>No sessions allocated.</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+</body>
+</html>

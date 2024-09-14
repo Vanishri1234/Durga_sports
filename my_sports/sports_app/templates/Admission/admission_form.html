@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admission Success</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            display: grid;
+            place-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+        }
+        .letter-content {
+            margin-bottom: 20px;
+        }
+        .signature {
+            margin-top: 40px;
+            text-align: center;
+        }
+        h2, p {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h3 {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .profile-img {
+            max-width: 200px;
+            max-height: 200px;
+            margin: 10px auto;
+            border-radius: 50%;
+        }
+        @media print {
+            body {
+                background-color: #fff;
+                padding: 20px;
+                margin: 0;
+                height: auto;
+            }
+            .container {
+                box-shadow: none;
+                width: auto;
+                margin: 0;
+                padding: 0;
+            }
+            .signature {
+                display: none;
+            }
+            /* Hide the print buttons when printing */
+            button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Admission Confirmation Letter</h2>
+        <div class="letter-content">
+            <h3><strong>Date:</strong> <span id="currentDate"></span></h3>
+            <p>Dear {{ admission.name}}</p>
+            <p>We are pleased to inform you that your admission application has been successfully processed.</p>
+            <p><strong>Details Submitted:</strong></p>
+            <ul>
+                <li><strong>Date of Birth:</strong> {{ admission.dob }}</li>
+                <li><strong>Gender:</strong> {{ admission.gender }}</li>
+                <li><strong>Phone Number:</strong> {{ admission.phone }}</li>
+                <li><strong>Aadhar Number:</strong> {{ admission.adhar }}</li>
+                <li><strong>Batch Time:</strong> {{ admission.batch_time }}</li>
+                <li><strong>Uniform Size:</strong> {{ admission.uniform_size }}</li>
+                <li><strong>Uniform Color:</strong> {{ admission.uniform_color }}</li>
+                <li><strong>Kits:</strong> {{ admission.kit }}</li>
+                <li><strong>Email:</strong> {{ admission.email }}</li>
+                <li><strong>Address:</strong> {{ admission.address }}</li>
+                <li><strong>Parent/Guardian Name:</strong> {{ admission.parent_name }}</li>
+                <li><strong>Parent/Guardian Phone:</strong> {{ admission.mobile }}</li>
+                <li><strong>Place:</strong> {{ admission.place }}</li>
+            </ul>
+            <p>Thank you for choosing our program. We look forward to seeing you at the training sessions.</p>
+            <p>Sincerely,</p>
+            <div class="signature">
+                <img src="" alt="Signature">
+                <p>John Doe<br>Director of Admissions</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Confirmation Letter button -->
+    <button onclick="printPage()">Print Confirmation Letter</button>
+
+    <!-- Print Receipt button -->
+    <button onclick="printReceipt()">Receipt</button>
+
+    <!-- JavaScript for date display and print functionality -->
+    <script>
+        function getCurrentDate() {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date();
+            return today.toLocaleDateString('en-US', options);
+        }
+        document.getElementById('currentDate').textContent = getCurrentDate();
+
+        function printPage() {
+            window.print();
+        }
+
+        function printReceipt() {
+            // Add functionality to print the receipt
+            // Example: window.print();
+            alert("Functionality for printing receipt will be added here.");
+        }
+
+        window.onbeforeprint = function() {
+            document.querySelectorAll('button').forEach(btn => {
+                btn.style.display = 'none';
+            });
+        };
+    </script>
+</body>
+</html>

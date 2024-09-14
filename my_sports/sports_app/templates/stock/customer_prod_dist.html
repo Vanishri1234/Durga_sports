@@ -1,0 +1,290 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Untree.co" />
+    <link rel="shortcut icon" href="{% static 'favicon.png' %}" />
+
+    <meta name="description" content="" />
+    <meta name="keywords" content="bootstrap, bootstrap5" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'fonts/flaticon/font/flaticon.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/tiny-slider.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <title>Consignment</title>
+    <style>
+        .suggestions-box {
+            border: 1px solid #ddd;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: white;
+            position: absolute;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .suggestions-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .suggestions-box li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .suggestions-box li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="site-mobile-menu site-navbar-target">
+        <div class="site-mobile-menu-header">
+            <div class="site-mobile-menu-close">
+                <span class="icofont-close js-menu-toggle"></span>
+            </div>
+        </div>
+        <div class="site-mobile-menu-body"></div>
+    </div>
+
+    {% include 'nav.html' %}
+    <br>
+
+
+    <style>
+        /* Basic styling for the table */
+        .table-container {
+            overflow-x: auto; /* Allows horizontal scrolling if the table is too wide */
+            margin-bottom: 20px; /* Adds space below the table */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        /* Basic styling for the search input */
+        #branchSearch {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        /* Styling for the grid layout */
+        .details-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            padding: 16px;
+        }
+        .details-item, .product-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            background-color: #f9f9f9;
+        }
+        .details-item p, .product-item p {
+            margin: 0;
+        }
+        .details-item .label, .product-item .label {
+            font-weight: bold;
+        }
+        /* Styling for the product details */
+        .product-details-container {
+            margin-top: 10px;
+        }
+        /* Additional styling to make the form and dropdown consistent */
+        form {
+            margin-bottom: 20px;
+        }
+        select {
+            padding: 4px;
+            margin-top: 4px;
+            width: 20%;
+        }
+        /* Styling for quantity input and total cost */
+        #quantity {
+            padding: 4px;
+            margin-top: 4px;
+            width: 100px;
+        }
+        #totalCost {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #updatedBalance {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+      <script>
+        function calculateTotalCost() {
+            var pricePerUnit = parseFloat(document.getElementById("pricePerUnit").textContent);
+            var quantity = parseFloat(document.getElementById("quantity").value);
+            var totalCost = document.getElementById("totalCost");
+            var updatedBalance = document.getElementById("updatedBalance");
+
+            if (!isNaN(pricePerUnit) && !isNaN(quantity) && quantity > 0) {
+                var totalCostValue = pricePerUnit * quantity;
+                totalCost.textContent = 'Total Cost: ' + totalCostValue.toFixed(2);
+
+                // Calculate and display the updated balance
+                var balance = parseFloat(document.getElementById("balance").value) || 0;
+                var newBalance = balance - totalCostValue; // Assuming balance is reduced by total cost
+                updatedBalance.textContent = 'Updated Balance: ' + (balance > 0 ? newBalance.toFixed(2) : totalCostValue.toFixed(2));
+
+                // Set hidden input values
+                document.getElementById("totalAmount").value = totalCostValue.toFixed(2);
+                document.getElementById("updatedBalanceInput").value = balance > 0 ? newBalance.toFixed(2) : totalCostValue.toFixed(2);
+                document.getElementById("pricePerUnitInput").value = pricePerUnit.toFixed(2);
+                document.getElementById("kit_name").value = document.getElementById("productName").textContent;
+            } else {
+                totalCost.textContent = 'Total Cost:';
+                updatedBalance.textContent = 'Updated Balance:';
+
+                // Clear hidden input values
+                document.getElementById("totalAmount").value = '';
+                document.getElementById("updatedBalanceInput").value = '';
+                document.getElementById("pricePerUnitInput").value = '';
+                document.getElementById("kit_name").value = '';
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <br><br><br><br><br><br>
+    <h1 style="text-align: center;">Product Distribution</h1>
+    <form method="get" action="">
+        <label for="name">Customer:</label>
+        <select name="name" id="name" onchange="this.form.submit()">
+            <option value="">-- Select a Customer --</option>
+            {% for customer in names %}
+                <option value="{{ customer }}" {% if customer == request.GET.name %}selected{% endif %}>{{ customer }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    {% if details %}
+        <h2>Details for {{ details.full_name }}</h2>
+
+        <div class="details-container">
+            <div class="details-item"><p class="label">Full Name:</p><p>{{ details.full_name }}</p></div>
+            <div class="details-item"><p class="label">Phone Number:</p><p>{{ details.phone_number }}</p></div>
+            <div class="details-item"><p class="label">Email:</p><p>{{ details.email }}</p></div>
+            <div class="details-item"><p class="label">Address:</p><p>{{ details.address }}</p></div>
+            <div class="details-item"><p class="label">City:</p><p>{{ details.city }}</p></div>
+        </div>
+
+        <!-- Product Selection and Details -->
+        <form method="get" action="">
+            <input type="hidden" name="name" value="{{ details.full_name }}">
+            <label for="product">Select Product:</label>
+            <select name="product_id" id="product" onchange="this.form.submit()">
+                <option value="">-- Select a Product --</option>
+                {% for product in products %}
+                    <option value="{{ product.id }}" {% if product.id|stringformat:"s" == request.GET.product_id %}selected{% endif %}>{{ product.kit_name }}</option>
+                {% endfor %}
+            </select>
+        </form>
+
+        {% if product_details %}
+            <div class="product-details-container">
+                <h3>Product Details</h3>
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <input type="hidden" name="full_name" value="{{ details.full_name }}">
+                    <input type="hidden" name="phone_number" value="{{ details.phone_number }}">
+                    <input type="hidden" name="email" value="{{ details.email }}">
+                    <input type="hidden" name="address" value="{{ details.address }}">
+                    <input type="hidden" name="city" value="{{ details.city }}">
+                    <input type="hidden" id="kit_name" name="kit_name" value="{{ product_details.kit_name }}">
+                    <input type="hidden" id="balance" name="balance" value="{{ details.balance }}">
+                    <input type="hidden" id="pricePerUnitInput" name="price_per_unit" value="{{ product_details.price_per_unit }}">
+
+                    <div class="details-container">
+                        <div class="product-item">
+                            <p class="label">Product Name:</p>
+                            <p id="productName">{{ product_details.kit_name }}</p>
+                        </div>
+
+                        <div class="product-item">
+                            <p class="label">Price per Unit:</p>
+                            <p id="pricePerUnit">{{ product_details.price_per_unit }}</p>
+                        </div>
+
+                        <div class="product-item">
+                            <p class="label">Quantity:</p>
+                            <input type="number" id="quantity" name="quantity" min="1" oninput="calculateTotalCost()">
+                        </div>
+
+                        <div class="product-item">
+                            <p class="label" id="totalCost">Total Cost:</p>
+                        </div>
+                        <div class="product-item">
+                            <p class="label" id="updatedBalance">Updated Balance:</p>
+                        </div>
+
+                        <input type="hidden" id="totalAmount" name="totalAmount">
+                        <input type="hidden" id="updatedBalanceInput" name="updatedBalance">
+
+                        <button type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <!-- end copyright -->
+
+
+    <!-- count down -->
+
+
+  <br><br><br><br><br><br><br><br><br>
+    <br><br><br><br><br><br>
+    </div>
+  <div class="row mt-5">
+        <div class="col-12 text-center">
+            <p>
+                Copyright &copy;
+                <script>
+                    document.write(new Date().getFullYear());
+                </script>
+                . All Rights Reserved. <br>&mdash; Designed and Developed By -
+                <a href="https://flowercreeper.com/index.php">FlowerCreeper</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Preloader -->
+    <div id="overlayer"></div>
+    <div class="loader">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/tiny-slider.js' %}"></script>
+    <script src="{% static 'js/aos.js' %}"></script>
+    <script src="{% static 'js/navbar.js' %}"></script>
+    <script src="{% static 'js/counter.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admission Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            width: 100px;
+        }
+        .header h1, .header h2 {
+            margin: 5px 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .form-group .row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-group .row .col {
+            flex: 1;
+            margin-right: 10px;
+        }
+        .form-group .row .col:last-child {
+            margin-right: 0;
+        }
+        .photo {
+            text-align: center;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .submit-btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="logo.png" alt="School Logo">
+            <h1>CITI FORD SCHOOL</h1>
+            <h2>[ ENGLISH MEDIUM ]</h2>
+            <p>In the district of SIWAN BIHAR, Qutub Chapra.Siwan Road. P.O.- Bakarganj, Rly Stn. Siwan, Pin: 841286</p>
+            <p>Email: citifordschool@gmail.com | Contact: 9233378888, 9932103774, 9199554255</p>
+            <h3>Session: 201__ - 201__</h3>
+        </div>
+        <div class="form-group">
+            <label for="admission_no">Admission No.:</label>
+            <input type="text" id="admission_no" name="admission_no">
+        </div>
+        <div class="photo">
+            <p>Stamp Size Photo</p>
+        </div>
+        <div class="form-group">
+            <label for="student_name">1. Name of Student:</label>
+            <input type="text" id="student_name" name="student_name">
+        </div>
+        <div class="form-group">
+            <label for="dob">2. Date of Birth:</label>
+            <input type="date" id="dob" name="dob">
+            <p>(Please attach birth certificate - Xerox)</p>
+        </div>
+        <div class="form-group">
+            <label for="fathers_name">3. Father's Name:</label>
+            <input type="text" id="fathers_name" name="fathers_name">
+        </div>
+        <div class="form-group">
+            <label for="mothers_name">4. Mother's Name:</label>
+            <input type="text" id="mothers_name" name="mothers_name">
+        </div>
+        <div class="form-group row">
+            <div class="col">
+                <label for="fathers_occupation">5. Occupation: Father</label>
+                <input type="text" id="fathers_occupation" name="fathers_occupation">
+            </div>
+            <div class="col">
+                <label for="mothers_occupation">Mother</label>
+                <input type="text" id="mothers_occupation" name="mothers_occupation">
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col">
+                <label for="fathers_qualification">6. Education qualification of Father</label>
+                <input type="text" id="fathers_qualification" name="fathers_qualification">
+            </div>
+            <div class="col">
+                <label for="mothers_qualification">Mother</label>
+                <input type="text" id="mothers_qualification" name="mothers_qualification">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="address_residential">7. Address: Residential</label>
+            <input type="text" id="address_residential" name="address_residential">
+        </div>
+        <div class="form-group">
+            <label for="address_office">Office</label>
+            <input type="text" id="address_office" name="address_office">
+        </div>
+        <div class="form-group row">
+            <div class="col">
+                <label for="phone_residential">8. Phone No: Residential</label>
+                <input type="text" id="phone_residential" name="phone_residential">
+            </div>
+            <div class="col">
+                <label for="phone_office">Office</label>
+                <input type="text" id="phone_office" name="phone_office">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="guardian_name">9. Name and address of Guardian</label>
+            <input type="text" id="guardian_name" name="guardian_name">
+        </div>
+        <div class="form-group">
+            <label for="nationality">10. Nationality</label>
+            <input type="text" id="nationality" name="nationality">
+        </div>
+        <div class="form-group">
+            <label for="religion">Religion</label>
+            <input type="text" id="religion" name="religion">
+        </div>
+        <div class="form-group">
+            <label for="class_sought">11. Class in which admission sought</label>
+            <input type="text" id="class_sought" name="class_sought">
+        </div>
+        <div class="form-group">
+            <label for="admitted_class">Admitted to Class</label>
+            <input type="text" id="admitted_class" name="admitted_class">
+        </div>
+        <div class="form-group">
+            <label for="principal_signature">Principal</label>
+            <input type="text" id="principal_signature" name="principal_signature">
+        </div>
+        <button type="submit" class="submit-btn">Submit</button>
+    </div>
+</body>
+</html>

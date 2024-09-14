@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration Form</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h2 class="mt-4 mb-4">Student Registration Form</h2>
+        <form method="post" action="{% url 'student_register' %}">
+            {% csrf_token %}
+            <!-- Student Information -->
+            <div class="form-group">
+                <label for="first_name">First Name:</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="last_name">Last Name:</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" class="form-control" id="dob" name="dob" required>
+            </div>
+
+            <div class="form-group">
+                <label>Gender:</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="male" name="gender" value="male" required>
+                    <label class="form-check-label" for="male">Male</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="female" name="gender" value="female" required>
+                    <label class="form-check-label" for="female">Female</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="blood_group">Blood Group:</label>
+                <input type="text" class="form-control" id="blood_group" name="blood_group">
+            </div>
+
+            <!-- Parent Information -->
+            <h3 class="mt-4">Parent Details</h3>
+
+            <div class="form-group">
+                <label for="parent_full_name">Full Name:</label>
+                <input type="text" class="form-control" id="parent_full_name" name="parent_full_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="parent_mobile">Mobile Number:</label>
+                <input type="tel" class="form-control" id="parent_mobile" name="parent_mobile" required>
+            </div>
+
+            <div class="form-group">
+                <label for="parent_email">Email ID:</label>
+                <input type="email" class="form-control" id="parent_email" name="parent_email">
+            </div>
+
+            <div class="form-group">
+                <label for="parent_address">Address:</label>
+                <textarea class="form-control" id="parent_address" name="parent_address" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="parent_occupation">Occupation:</label>
+                <input type="text" class="form-control" id="parent_occupation" name="parent_occupation">
+            </div>
+
+            <!-- Submit Button --><button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

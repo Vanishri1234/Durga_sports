@@ -1,0 +1,331 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Untree.co" />
+    <link rel="shortcut icon" href="{% static 'favicon.png' %}" />
+
+    <meta name="description" content="" />
+    <meta name="keywords" content="bootstrap, bootstrap5" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'fonts/flaticon/font/flaticon.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/tiny-slider.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <title>Admission</title>
+
+    <style>
+        .suggestions-box {
+            border: 1px solid #ddd;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: white;
+            position: absolute;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .suggestions-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .suggestions-box li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .suggestions-box li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="site-mobile-menu site-navbar-target">
+        <div class="site-mobile-menu-header">
+            <div class="site-mobile-menu-close">
+                <span class="icofont-close js-menu-toggle"></span>
+            </div>
+        </div>
+        <div class="site-mobile-menu-body"></div>
+    </div>
+
+    {% include 'nav.html' %}
+    <br><br><br><br><br><br>
+
+    <!-- Player Admission Form -->
+    <div class="container">
+        <h2 class="text-center mb-4">Player Admission Form</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row mb-3">
+                <div class="col-md-3 form-label-group">
+                    <label for="name" class="form-label">Name:</label>
+                    <input type="text" id="name" name="name" class="form-control form-control-small" required>
+                </div>
+                <div class="col-md-3 form-label-group">
+                    <label for="dob" class="form-label">Date of Birth:</label>
+                    <input type="date" class="form-control form-control-small" id="dob" name="dob" onchange="calculateAge()" required>
+                </div>
+                <div class="col-md-3 form-label-group">
+                    <label for="age" class="form-label">Age:</label>
+                    <input type="text" class="form-control form-control-small" id="age" name="age" readonly>
+                </div>
+                <div class="col-md-3 form-label-group">
+                    <label for="gender" class="form-label">Gender:</label>
+                    <select id="gender" name="gender" class="form-control form-control-small" required>
+                        <option>Select</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3 form-label-group">
+                    <label for="phone" class="form-label">Phone Number:</label>
+                    <input type="tel" id="phone" name="phone" class="form-control form-control-small" required>
+                </div>
+                <div class="col-md-3 form-label-group">
+                    <label for="blood_group" class="form-label">Blood Group:</label>
+                    <input type="text" id="blood_group" name="blood_group" class="form-control form-control-small" required>
+                </div>
+                <div class="col-md-3 form-label-group">
+                    <label for="adhar" class="form-label">Aadhar Number:</label>
+                    <input type="text" id="adhar" name="adhar" class="form-control form-control-small">
+                </div>
+                <div class="col-md-3 form-label-group">
+                    <label for="parentName" class="form-label">Parent/Guardian Full Name:</label>
+                    <input type="text" id="parentName" name="parentName" class="form-control form-control-small" required>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3 form-label-group">
+                    <label for="mobile" class="form-label">Parent/Guardian Mobile Number:</label>
+                    <input type="tel" id="mobile" name="mobile" class="form-control form-control-small" required>
+                </div>
+                <div class="col-md-3 form-label-group">
+                    <label for="email" class="form-label">Parent/Guardian Email:</label>
+                    <input type="email" id="email" name="email" class="form-control form-control-small" required>
+                </div>
+                <div class="col-md-3 form-label-group">
+                    <label for="place" class="form-label">Place:</label>
+                    <input type="text" id="place" name="place" class="form-control form-control-small" required>
+                </div>
+                <div class="col-md-3 form-label-group">
+                    <label for="address" class="form-label">Address:</label>
+                    <textarea id="address" name="address" class="form-control form-control-small" rows="2" required></textarea>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3 form-label-group">
+                    <label for="doj" class="form-label">Date of Joining:</label>
+                    <input type="date" id="doj" name="doj" class="form-control form-control-small" required>
+                </div>
+                <div class="col-md-3 form-label-group">
+                    <label for="uniformSize" class="form-label">Uniform Size:</label>
+                    <select id="uniformSize" name="uniformSize" class="form-control form-control-small" required>
+                        <option>Select</option>
+                        <option value="28">28</option>
+                        <option value="30">30</option>
+                        <option value="32">32</option>
+                        <option value="34">34</option>
+                        <option value="36">36</option>
+                        <option value="38">38</option>
+                        <option value="40">40</option>
+                        <option value="42">42</option>
+                        <option value="44">44</option>
+                        <option value="46">46</option>
+                    </select>
+                </div>
+                <div class="col-md-3 form-label-group">
+                    <label for="uniformColor" class="form-label">Uniform Color:</label>
+                    <select id="uniformColor" name="uniformColor" class="form-control form-control-small" required>
+                        <option>Select</option>
+                        <option value="white">White</option>
+                        <option value="colored">Colored</option>
+                    </select>
+                </div>
+                <div class="col-md-3 form-label-group">
+                    <label for="batchtime" class="form-label">Batch Time:</label>
+                    <select id="batchtime" name="batchtime" class="form-control form-control-small" required>
+                        <option>Select</option>
+                        <option value="Batch 1">6-8am</option>
+                        <option value="Batch 2">8-10am</option>
+                        <option value="Batch 3">4-6pm</option>
+                        <option value="Batch 4">5.30-7.30pm</option>
+                        <option value="Batch 5">7.30-9.30pm</option>
+                    </select>
+                </div>
+            </div>
+
+            <h3 class="text-center mt-4">Academy Package</h3>
+
+            <div class="row mb-3">
+                <div class="col-md-3 form-check">
+                    <input class="form-check-input" type="radio" name="package" id="packageMonthly" value="monthly" required>
+                    <label class="form-check-label" for="packageMonthly">Monthly</label>
+                </div>
+                <div class="col-md-3 form-check">
+                    <input class="form-check-input" type="radio" name="package" id="packageQuarterly" value="quarterly">
+                    <label class="form-check-label" for="packageQuarterly">Quarterly</label>
+                </div>
+                <div class="col-md-3 form-check">
+                    <input class="form-check-input" type="radio" name="package" id="packageHalfYearly" value="half_yearly">
+                    <label class="form-check-label" for="packageHalfYearly">Half Yearly</label>
+                </div>
+                <div class="col-md-3 form-check">
+                    <input class="form-check-input" type="radio" name="package" id="packageYearly" value="yearly">
+                    <label class="form-check-label" for="packageYearly">Yearly</label>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3" id="sessionsOptions" style="display: none;">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sessions" id="2sessions" value="weekly_2" required>
+                        <label class="form-check-label" for="2sessions">Weekly 2 sessions</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sessions" id="3sessions" value="weekly_3">
+                        <label class="form-check-label" for="3sessions">Weekly 3 sessions</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sessions" id="6sessions" value="weekly_6">
+                        <label class="form-check-label" for="6sessions">Weekly 6 sessions</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3 form-label-group">
+                    <label for="totalAmount" class="form-label">Total Amount:</label>
+                    <input type="number" id="totalAmount" name="totalAmount" class="form-control form-control-small" required readonly>
+                </div>
+                <div class="col-md-3 form-label-group">
+                    <label for="payment" class="form-label">Payment:</label>
+                    <input type="number" id="payment" name="payment" class="form-control form-control-small" required>
+                </div>
+                <div class="col-md-3 form-label-group">
+                    <label for="balance" class="form-label">Balance:</label>
+                    <input type="number" id="balance" name="balance" class="form-control form-control-small" required readonly>
+                </div>
+
+            </div>
+
+            <div class="text-left mt-4">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const packageInputs = document.querySelectorAll('input[name="package"]');
+            const sessionsOptions = document.getElementById("sessionsOptions");
+            const totalAmountInput = document.getElementById("totalAmount");
+            const paymentInput = document.getElementById("payment");
+            const balanceInput = document.getElementById("balance");
+
+            function updatetotalAmount() {
+                const selectedPackage = document.querySelector('input[name="package"]:checked');
+                const selectedSession = document.querySelector('input[name="sessions"]:checked');
+
+                if (selectedPackage && selectedSession) {
+                    const packageValue = selectedPackage.value;
+                    const sessionValue = selectedSession.value;
+
+                    // Dummy pricing logic based on package and session
+                    const prices = {
+                        monthly: { weekly_2: 2900, weekly_3: 3900, weekly_6: 4900 },
+                        quarterly: { weekly_2: 6900, weekly_3: 7900, weekly_6: 8900 },
+                        half_yearly: { weekly_2: 12900, weekly_3: 14900, weekly_6: 16900 },
+                        yearly: { weekly_2: 22900, weekly_3: 25900, weekly_6: 29900 }
+                    };
+
+                    const totalAmount = prices[packageValue][sessionValue];
+                    totalAmountInput.value = totalAmount;
+
+                    // Update balance if payment amount is entered
+                    const paymentAmount = parseFloat(paymentInput.value) || 0;
+                    balanceInput.value = totalAmount - paymentAmount;
+                }
+            }
+
+            packageInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    sessionsOptions.style.display = "block";
+                    updatetotalAmount();
+                });
+            });
+
+            const sessionInputs = document.querySelectorAll('input[name="sessions"]');
+            sessionInputs.forEach(input => {
+                input.addEventListener('change', updatetotalAmount);
+            });
+
+            paymentInput.addEventListener('input', function() {
+                const totalAmount = parseFloat(totalAmountInput.value) || 0;
+                const payment = parseFloat(this.value) || 0;
+                balanceInput.value = totalAmount - payment;
+            });
+        });
+
+        function calculateAge() {
+            var dob = document.getElementById('dob').value;
+            if (dob) {
+                var today = new Date();
+                var birthDate = new Date(dob);
+                var age = today.getFullYear() - birthDate.getFullYear();
+                var m = today.getMonth() - birthDate.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                document.getElementById('age').value = age;
+            }
+        }
+    </script>
+
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <p>
+                Copyright &copy;
+                <script>
+                    document.write(new Date().getFullYear());
+                </script>
+                . All Rights Reserved. <br>&mdash; Designed and Developed By -
+                <a href="https://flowercreeper.com/index.php">FlowerCreeper</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Preloader -->
+    <div id="overlayer"></div>
+    <div class="loader">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/tiny-slider.js' %}"></script>
+    <script src="{% static 'js/aos.js' %}"></script>
+    <script src="{% static 'js/navbar.js' %}"></script>
+    <script src="{% static 'js/counter.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+</body>
+</html>
